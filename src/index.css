@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #010169;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -26,6 +26,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center; /* Pastikan konten di tengah */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -35,6 +36,33 @@ h1 {
   line-height: 1.1;
 }
 
+/* --- BAGIAN BARU: Agar Input & Tombol Sejajar --- */
+.input-group {
+  display: flex;         /* Membuat elemen berjejer ke samping */
+  flex-direction: row;   /* Arah baris (kiri ke kanan) */
+  gap: 12px;             /* Jarak spasi antara input dan tombol */
+  align-items: center;   /* Posisi vertikal rata tengah */
+}
+
+/* --- BAGIAN BARU: Style Input (Tombol Ngisi) --- */
+input {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;  /* Padding disamakan dengan button agar tingginya sama */
+  font-size: 1em;        /* Ukuran font disamakan */
+  font-family: inherit;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  outline: none;
+  transition: border-color 0.25s;
+  border: 1px solid #555; /* Border tipis biar kelihatan */
+}
+
+input:focus {
+  border-color: #646cff; /* Warna border saat diketik */
+}
+
+/* --- Style Button Asli --- */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -46,6 +74,7 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
@@ -54,6 +83,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* --- Mode Terang (Light Mode) --- */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -62,7 +92,14 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
+  
+  /* Update warna background button & input di mode terang */
   button {
     background-color: #f9f9f9;
+  }
+  input {
+    background-color: #f9f9f9;
+    color: #213547;
+    border: 1px solid #ccc;
   }
 }
