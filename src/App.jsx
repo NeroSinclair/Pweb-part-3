@@ -1,57 +1,94 @@
-import { useState } from "react";
-import Button from "./Button";
-import Input from "./input"; // Pastikan nama filenya sesuai (besar/kecil)
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
-  const [todos, setTodos] = useState({});
-  
-  // 1. STATE: Pisahkan state untuk Nama dan Email (atau data tambahan lain)
-  const [inputNama, setInputNama] = useState('');
-  const [inputEmail, setInputEmail] = useState('');
+  const [mahasiswa, setMahasiswa] = useState([]);
+  const [form, setForm] = useState({
+    nama: "",
+    kelas: "",
+    npm: "",
+  });
 
-  // 2. HANDLER: Buat handler untuk masing-masing input
-  const handlerNama = (e) => {
-    setInputNama(e.target.value);
-  }
+  const getMahasiswa = async () => {
+    try {
+      const response = await axios.get("http://localhost/mahasiswa.php");
+      setMahasiswa(response.data);
+    } catch (error) {
+      console.log("tidak sambung api");
+    }
+  };
 
-  const handlerEmail = (e) => {
-    setInputEmail(e.target.value);
-  }
+  const addMahasiswa = async () => {
+    console.log(form);
+    try {
+      await axios.post("http://localhost/mahasiswa.php", form);
+      setForm({ nama: "", kelas: "", npm: "" });
+      getMahasiswa();
+    } catch (error) {
+      console.log("gagal post");
+    }
+  };
 
-  // 3. TOMBOL REGISTER: Masukkan kedua data ke dalam object todos
-  const handlerTambahData = () => {
-    console.log("Data:", inputNama, inputEmail);
-    
-    setTodos((prevTodos) => {
-      return {
-        ...prevTodos,
-        nama: inputNama,
-        email: inputEmail // Data tambahan masuk sini
-      }
-    });
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addMahasiswa();
+  };
+
+  useEffect(() => {
+    getMahasiswa();
+  }, []);
 
   return (
-    <div className="main-container">
-      <div className="input-group">
-        {/* Panggil Input Pertama (Nama) */}
-        <Input 
-            handlerInput={handlerNama} 
-            placeholder="Masukkan Nama..." 
-        />
-        
-        {/* Panggil Input Kedua (Email/Tambahan) */}
-        <Input 
-            handlerInput={handlerEmail} 
-            placeholder="Masukkan Email..." 
+    <div>
+
+      {/* FORM */}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Masukan Nama"
+          value={form.nama}
+          onChange={(e) => setForm({ ...form, nama: e.target.value })}
         />
 
-        {/* Tombol Register */}
-        <Button handlerTambahData={handlerTambahData} />
+        <br />
+
+        <input
+          type="text"
+          placeholder="Masukan NPM"
+          value={form.npm}
+          onChange={(e) => setForm({ ...form, npm: e.target.value })}
+        />
+
+        <br />
+
+        <input
+          type="text"
+          placeholder="Masukan Kelas"
+          value={form.kelas}
+          onChange={(e) => setForm({ ...form, kelas: e.target.value })}
+        />
+
+        <br /><br />
+
+        <button type="submit">
+          Kirim Data
+        </button>
+      </form>
+
+      <hr />
+
+      {/* LIST DATA */}
+      <div>
+        {mahasiswa.map((mhs, index) => (
+          <div key={index}>
+            <p>Nama : {mhs.nama}</p>
+            <p>Kelas : {mhs.kelas}</p>
+            <p>NPM : {mhs.npm}</p>
+            <hr />
+          </div>
+        ))}
       </div>
-      
-      {/* (Opsional) Cek hasil data di layar sementara */}
-      <pre style={{marginTop: '20px'}}>{JSON.stringify(todos, null, 2)}</pre>
+
     </div>
   );
 }
